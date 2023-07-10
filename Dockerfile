@@ -5,11 +5,36 @@ FROM --platform=linux/arm64/v8 node:14.21.2-alpine as builder
 
 RUN apk add --no-cache curl
 
-# Установка libvips
-RUN curl -LO https://github.com/lovell/sharp-libvips/releases/download/v8.9.1/libvips-8.9.1-linux-arm64v8.tar.gz \
-    && tar -xzf libvips-8.9.1-linux-arm64v8.tar.gz \
-    && rm libvips-8.9.1-linux-arm64v8.tar.gz \
-    && export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+# Install build dependencies
+RUN apk add --no-cache \
+    build-base \
+    automake \
+    autoconf \
+    libtool \
+    nasm \
+    zlib-dev \
+    libjpeg-turbo-dev \
+    libpng-dev \
+    libwebp-dev \
+    giflib-dev \
+    libexif-dev \
+    libxml2-dev \
+    glib-dev \
+    expat-dev
+
+# Download and extract libvips source code
+RUN curl -LO https://github.com/libvips/libvips/releases/download/v8.9.1/vips-8.9.1.tar.gz \
+    && tar xf vips-8.9.1.tar.gz \
+    && rm vips-8.9.1.tar.gz
+
+# Build and install libvips
+RUN cd vips-8.9.1 \
+    && ./configure \
+    && make \
+    && make install \
+    && ldconfig
+
+# Continue with the rest of your Dockerfile
 
 ENV PYTHON /usr/local/bin/python3
 
