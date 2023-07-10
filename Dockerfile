@@ -2,7 +2,12 @@
 
 # We label our stage as ‘builder’
 FROM --platform=linux/arm64/v8 node:14-alpine as builder
-ENV PYTHON /usr/bin/python
+
+№ENV PYTHON /usr/bin/python
+
+RUN apk add --no-cache python3
+RUN apk add --no-cache npm
+
 RUN npm install -g ionic cordova@8.0.0
 
 WORKDIR /app
