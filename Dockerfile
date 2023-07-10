@@ -9,6 +9,15 @@ RUN apk add --no-cache python3
 RUN apk add --no-cache npm
 RUN apk add --no-cache make g++
 
+RUN apk add --no-cache curl
+
+# Установка libvips
+# Установка libvips
+RUN curl -LO https://github.com/lovell/sharp-libvips/releases/download/v8.9.1/libvips-8.9.1-linux-arm64v8.tar.gz \
+    && tar -xzf libvips-8.9.1-linux-arm64v8.tar.gz \
+    && rm libvips-8.9.1-linux-arm64v8.tar.gz \
+    && export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+
 RUN npm install -g ionic cordova@8.0.0
 
 WORKDIR /app
