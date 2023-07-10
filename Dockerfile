@@ -1,7 +1,19 @@
 ### STAGE 1: Build ###
 
 # We label our stage as ‘builder’
-FROM node:14.21.2-alpine as builder
+FROM --platform=linux/arm64/v8 node:14.21.2-alpine as builder
+
+# Загрузка и распаковка архива с libvips
+RUN curl -LO https://github.com/lovell/sharp-libvips/releases/download/v8.9.1/libvips-8.9.1-linux-arm64v8.tar.gz \
+    && tar -xzf libvips-8.9.1-linux-arm64v8.tar.gz \
+    && rm libvips-8.9.1-linux-arm64v8.tar.gz
+
+# Установка libvips
+RUN cd libvips-8.9.1-linux-arm64v8 \
+    && ./configure --enable-shared \
+    && make \
+    && make install \
+    && ldconfig
 
 RUN npm install -g ionic cordova@8.0.0
 
