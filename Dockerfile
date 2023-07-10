@@ -8,7 +8,7 @@ FROM --platform=linux/arm64/v8 node:14-alpine as builder
 RUN apk add --no-cache python3
 RUN apk add --no-cache npm
 RUN apk add --no-cache make g++
-
+RUN apk add --no-cache build-base vips-dev fftw-dev glib-dev
 RUN apk add --no-cache curl
 
 # Установка libvips
@@ -24,7 +24,7 @@ WORKDIR /app
 
 COPY . ./
 
-RUN npm install
+RUN npm install --build-from-source
 
 RUN mkdir -p ./www
 
