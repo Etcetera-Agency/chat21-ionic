@@ -5,17 +5,11 @@ FROM --platform=linux/arm64/v8 node:14.21.2-alpine as builder
 
 RUN apk add --no-cache curl
 
-# Загрузка и распаковка архива с libvips
+# Установка libvips
 RUN curl -LO https://github.com/lovell/sharp-libvips/releases/download/v8.9.1/libvips-8.9.1-linux-arm64v8.tar.gz \
     && tar -xzf libvips-8.9.1-linux-arm64v8.tar.gz \
-    && rm libvips-8.9.1-linux-arm64v8.tar.gz
-
-# Установка libvips
-RUN cd libvips-8.9.1-linux-arm64v8 \
-    && ./configure --enable-shared \
-    && make \
-    && make install \
-    && ldconfig
+    && rm libvips-8.9.1-linux-arm64v8.tar.gz \
+    && export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
 
 RUN npm install -g ionic cordova@8.0.0
 
@@ -45,12 +39,8 @@ COPY --from=builder /app/platforms/browser/www/ /usr/share/nginx/html
 COPY --from=builder /app/src/chat-config-template.json /usr/share/nginx/html
 COPY --from=builder /app/src/firebase-messaging-sw-template.js /usr/share/nginx/html
 
-
-
 WORKDIR /usr/share/nginx/html
 
 RUN echo "Chat21 Ionic Started!!"
 
 CMD ["/bin/sh",  "-c",  "envsubst < /usr/share/nginx/html/chat-config-template.json > /usr/share/nginx/html/chat-config.json && envsubst < /usr/share/nginx/html/firebase-messaging-sw-template.js > /usr/share/nginx/html/firebase-messaging-sw.js && exec nginx -g 'daemon off;'"]
-
-
