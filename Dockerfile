@@ -1,9 +1,7 @@
 ### STAGE 1: Build ###
 
 # We label our stage as ‘builder’
-FROM --platform=linux/arm64/v8 node:14.21.2-alpine as builder
-
-ENV PYTHON /usr/local/bin/python3
+FROM --platform=linux/arm64/v8 node:10-alpine as builder
 
 RUN npm install -g ionic cordova@8.0.0
 
