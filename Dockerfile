@@ -7,6 +7,7 @@ FROM --platform=linux/arm64/v8 node:14-alpine as builder
 
 RUN apk add --no-cache python3
 RUN apk add --no-cache npm
+RUN apk add --no-cache make g++
 
 RUN npm install -g ionic cordova@8.0.0
 
